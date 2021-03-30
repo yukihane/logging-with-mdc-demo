@@ -1,6 +1,7 @@
 package com.example.loggingwithmdcdemo;
 
 import java.io.IOException;
+import java.util.UUID;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,12 +16,14 @@ public class MDCFilter extends OncePerRequestFilter {
         final FilterChain filterChain)
         throws ServletException, IOException {
 
-        MDC.put("MY_MDC", "MY_MDC_VALUE");
+        final String requestId = UUID.randomUUID().toString();
+
+        MDC.put("requestId", requestId);
 
         try {
             filterChain.doFilter(request, response);
         } finally {
-            MDC.clear();
+            MDC.remove("requestId");
         }
     }
 
