@@ -1,0 +1,22 @@
+== Spring Boot ErrorController logging with Logback MDC
+
+=== Problem
+
+* https://stackoverflow.com/q/66865224/4506703[Spring Boot ErrorController logging with Logback MDC]
+* https://ja.stackoverflow.com/q/74991/2808[Spring Boot ErrorController のログに Logback MDC の情報を付与したい]
+
+Typically, when adding request-scoped data to MDC, put and remove it on same `Filter`, like http://logback.qos.ch/manual/mdc.html#autoMDC[official example].
+
+Although above way cause a ploblem, when logging on `ErrorController`.
+
+Because `ErrorController` is executed after passing filters, `ErrorController` logs without MDC data.
+
+(See https://github.com/yukihane/logging-with-mdc-demo/tree/master[master branch].)
+
+=== Solution
+
+Remove MDC data on `ServletRequestListener#requestDestroyed()` instead of on `Filter`.
+
+https://github.com/apache/tomcat/blob/9.0.44/java/org/apache/catalina/core/StandardHostValve.java#L169-L186["RequestDestroy" event is fired after error reporting].
+
+(See https://github.com/yukihane/logging-with-mdc-demo/tree/solution[solution branch].)
