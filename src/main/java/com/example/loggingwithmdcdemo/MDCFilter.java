@@ -23,7 +23,7 @@ public class MDCFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } finally {
-            MDC.remove("requestId");
+            // MDC.remove("requestId");
         }
     }
 
